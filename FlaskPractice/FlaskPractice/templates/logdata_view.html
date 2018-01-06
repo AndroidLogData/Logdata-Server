@@ -5,12 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-{% for in range(10) %}
-<h1>Hello, World!</h1>
-{% endfor %}
 {% for d in data %}
-<h2>Post by {{ d.tag }}</h2>
-<p>{{ d.message }}</p>
+    <h2>Post by {{ d.tag }}</h2>
+    <p>{{ d.message }}</p>
 {% endfor %}
 </body>
 </html>

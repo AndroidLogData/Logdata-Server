@@ -16,6 +16,6 @@ class DBManager:
                                          'tag': request.form['tag'],
                                          'level': request.form['level']})
         data = mongo.db.logdata_android.find()
-        for d in data:
-            print(d)
-        return render_template('logdata_view.html', data=data)
+        # for d in data:
+        #     print(d)
+        return data
