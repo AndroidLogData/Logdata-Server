@@ -1,0 +1,7 @@
+Flask
+Flask-Pymongo
+Flask-mongoengine
+Flask-Mongokit
+cursor
+Jinja2
+mongoengine
