@@ -2,7 +2,7 @@ from flask import Blueprint
 
 from Logdata.Log_Data_Logger import Log
 
-flaskPractice = Blueprint('flaskpractice', __name__, template_folder='../templates', static_folder='../static')
+logdata = Blueprint('flaskpractice', __name__, template_folder='../templates', static_folder='../static')
 
-Log.info('static folder : %s' % flaskPractice.static_folder)
-Log.info('template folder : %s' % flaskPractice.template_folder)
+Log.info('static folder : %s' % logdata.static_folder)
+Log.info('template folder : %s' % logdata.template_folder)
