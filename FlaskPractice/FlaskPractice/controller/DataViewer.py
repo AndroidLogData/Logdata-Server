@@ -3,8 +3,11 @@ from FlaskPractice.FlackPractice_blueprint import flaskPractice
 from FlaskPractice.database import DBManager
 
 
-@flaskPractice.route('/logdata', methods=['PUT'])
+@flaskPractice.route('/logdata', methods=['GET', 'PUT'])
 def logData():
+    if request.method == 'GET':
+        data = DBManager.getLogdata()
+        return render_template('logdata_view.html', logdata=data)
     if request.method == 'PUT':
         data = DBManager.dataInsert(request)
         # return 'PUT'
@@ -15,4 +18,4 @@ def logData():
         # data = mongo.db.logdata_android.find()
         for d in data:
             print(d)
-        return render_template('logdata_view.html', data=data)
+        return 'success'

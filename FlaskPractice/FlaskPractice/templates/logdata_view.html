@@ -5,9 +5,11 @@
     <title>Title</title>
 </head>
 <body>
-{% for d in data %}
-    <h2>Post by {{ d.tag }}</h2>
-    <p>{{ d.message }}</p>
+{% for log in logdata %}
+    <h2>{{ log.tag }}</h2>
+    <p>{{ log.message }}</p>
+    <p>{{ log.level }}</p>
+    <p>{{ log.time }}</p>
 {% endfor %}
 </body>
 </html>
