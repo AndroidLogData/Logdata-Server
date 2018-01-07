@@ -16,10 +16,6 @@ class DBManager:
                                          'tag': request.form['tag'],
                                          'level': request.form['level'],
                                          'time': request.form['time']})
-        data = mongo.db.logdata_android.find()
-        # for d in data:
-        #     print(d)
-        return data
 
     @staticmethod
     def getLogdata():

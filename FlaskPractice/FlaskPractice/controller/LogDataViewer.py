@@ -1,5 +1,5 @@
 from flask import render_template, request
-from FlaskPractice.FlackPractice_blueprint import flaskPractice
+from FlaskPractice.Log_Data_Blueprint import flaskPractice
 from FlaskPractice.database import DBManager
 
 
@@ -14,13 +14,5 @@ def logData():
         data = DBManager.getLogdata()
         return render_template('logdata_view.html', logdata=data)
     if request.method == 'PUT':
-        data = DBManager.dataInsert(request)
-        # return 'PUT'
-        # print("adsfjore : " + str(mongo))
-        # mongo.db.logdata_android.insert({'message': request.form['message'],
-        #                                  'tag': request.form['tag'],
-        #                                  'level': request.form['level']})
-        # data = mongo.db.logdata_android.find()
-        for d in data:
-            print(d)
+        DBManager.dataInsert(request)
         return 'success'
