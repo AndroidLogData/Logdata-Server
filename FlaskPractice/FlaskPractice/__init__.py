@@ -7,7 +7,7 @@ def create_app(config_filepath='resource/config.cfg'):
     flask_practice = Flask(__name__)
     flask_practice.config['MONGODB_SETTINGS'] = {'db': 'logdata_android'}
 
-    from FlaskPractice.controller import DataViewer
+    from FlaskPractice.controller import LogDataViewer
 
     from FlaskPractice.FlackPractice_blueprint import flaskPractice
     flask_practice.register_blueprint(flaskPractice)

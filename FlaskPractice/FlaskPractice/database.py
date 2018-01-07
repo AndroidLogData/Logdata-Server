@@ -1,3 +1,4 @@
+import pymongo
 from flask_pymongo import PyMongo
 
 
@@ -13,7 +14,8 @@ class DBManager:
         print(request.form)
         mongo.db.logdata_android.insert({'message': request.form['message'],
                                          'tag': request.form['tag'],
-                                         'level': request.form['level']})
+                                         'level': request.form['level'],
+                                         'time': request.form['time']})
         data = mongo.db.logdata_android.find()
         # for d in data:
         #     print(d)
@@ -21,4 +23,4 @@ class DBManager:
 
     @staticmethod
     def getLogdata():
-        return mongo.db.logdata_android.find()
+        return mongo.db.logdata_android.find().sort([('time', pymongo.ASCENDING)])

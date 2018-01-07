@@ -4,11 +4,6 @@ from FlaskPractice import create_app
 app = create_app()
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
-
 @app.route('/crash', methods=['POST'])
 def crash():
     print(request.data)
