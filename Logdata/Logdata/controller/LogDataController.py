@@ -18,7 +18,7 @@ def logData():
         return render_template('logdata_view.html', logdata=data)
     elif request.method == 'POST':
         print(request.headers)
-        # jsonString = request.get_json()
-        # print(jsonString)
-        DBManager.logDataInsert(request)
+        jsonString = request.get_json()
+        print(jsonString)
+        DBManager.logDataInsert(jsonString)
         return 'success'
