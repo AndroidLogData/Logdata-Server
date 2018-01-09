@@ -15,7 +15,7 @@ def index():
 def logData():
     if request.method == 'GET':
         data = DBManager.getLogdata()
-        return render_template('logdata_view.html', logData=data)
+        return render_template('logdata_view.html', logdata=data)
     elif request.method == 'POST':
         print(request.headers)
         # jsonString = request.get_json()
