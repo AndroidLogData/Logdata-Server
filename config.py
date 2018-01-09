@@ -1,6 +1,0 @@
-AZURE_STORAGE_NAME = 'mirisstorage'
-AZURE_STORAGE_KEY = 'KdRI8bpF4kvMvzHzG4yf3jZs+AeKMH1KSQC/efvVPrE7rvXRkVLl5Wo3Ozr9OLJDcUEpfrAQzXZMGOpewe9hCA=='
-AZURE_CONTAINER_NAME = 'images'
-# COGNITIVE_URL = 'https://westus.api.cognitive.microsoft.com/vision/v1.0/ocr'
-COGNITIVE_KEY = '13382d8a5bee440f88610339fd883fd3'
-COGNITIVE_URL = 'https://eastasia.api.cognitive.microsoft.com/vision/v1.0/ocr'
