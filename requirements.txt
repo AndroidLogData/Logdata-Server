@@ -1,5 +1,2 @@
 Flask
-Flask-Pymongo
-Flask-mongoengine
 azure
-Jinja2
