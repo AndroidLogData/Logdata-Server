@@ -17,21 +17,6 @@ class DBManager:
     @staticmethod
     def logDataInsert(jsonString):
         try:
-            # print(request.headers)
-            # print(request.form)
-            # print(request.content_type)
-            # mongo.db.logdata_android.insert({'message': request.form['message'],
-            #                                  'tag': request.form['tag'],
-            #                                  'level': request.form['level'],
-            #                                  'time': request.form['time'],
-            #                                  'totalMemory': request.form['totalMemory'],
-            #                                  'availMemory': request.form['availMemory'],
-            #                                  'memoryPercentage': request.form['memoryPercentage'],
-            #                                  'threshold': request.form['threshold'],
-            #                                  'lowMemory': request.form['lowMemory'],
-            #                                  'dalvikPss': request.form['dalvikPss'],
-            #                                  'otherPss': request.form['otherPss'],
-            #                                  'totalPss': request.form['totalPss']})
             mongo.db.logdata_android.insert({'message': jsonString['message'],
                                              'tag': jsonString['tag'],
                                              'level': jsonString['level'],

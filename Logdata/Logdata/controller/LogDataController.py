@@ -1,9 +1,7 @@
-import json
-
 from flask import render_template, request
 
-from Logdata.Log_Data_Blueprint import logdata
 from Logdata.Database import DBManager
+from Logdata.Log_Data_Blueprint import logdata
 
 
 @logdata.route('/')
