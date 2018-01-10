@@ -37,9 +37,19 @@ class DBManager:
             Log.error("서버 연결 실패 : %s" % e)
 
     @staticmethod
-    def crashDataInsert(request):
+    def crashDataInsert(jsonString):
         try:
-            mongo.db.logdata_android.insert({'os': request.form['message']})
+            mongo.db.crashdata_android.insert({'AndroidVersion': jsonString['AndroidVersion'],
+                                               'APPVersionCode': jsonString['APPVersionCode'],
+                                               'APPVersionName': jsonString['APPVersionName'],
+                                               'AvailableMemorySize': jsonString['AvailableMemorySize'],
+                                               'Brand': jsonString['Brand'],
+                                               'Build': jsonString['Build'],
+                                               'DeviceID': jsonString['DeviceID'],
+                                               'Display': jsonString['Display'],
+                                               'DeviceFeatures': jsonString['DeviceFeatures'],
+                                               'Environment': jsonString['Environment'],
+                                               'Logcat': jsonString['Logcat']})
         except pymongo.errors.DuplicateKeyError as e:
             Log.error("중복되는 키가 존재합니다.: %s" % e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
