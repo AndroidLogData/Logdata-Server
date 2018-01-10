@@ -49,7 +49,8 @@ class DBManager:
                                                'Display': jsonString['Display'],
                                                'DeviceFeatures': jsonString['DeviceFeatures'],
                                                'Environment': jsonString['Environment'],
-                                               'Logcat': jsonString['Logcat']})
+                                               'Logcat': jsonString['Logcat'],
+                                               'Time': jsonString['Time']})
         except pymongo.errors.DuplicateKeyError as e:
             Log.error("중복되는 키가 존재합니다.: %s" % e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
@@ -59,6 +60,16 @@ class DBManager:
     def getLogdata():
         try:
             return mongo.db.logdata_android.find().sort([('time', pymongo.DESCENDING)])
+        except Exception as e:
+            print(e)
+        except pymongo.errors.ServerSelectionTimeoutError as e:
+            Log.error("서버 연결 실패 : %s" % e)
+
+    @staticmethod
+    def getCrashData():
+        try:
+            return mongo.db.crashdata_android.find_one()
+            # return mongo.db.crashdata_android.find_one().sort([('time', pymongo.DESCENDING)])
         except Exception as e:
             print(e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
