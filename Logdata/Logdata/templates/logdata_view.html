@@ -2,6 +2,30 @@
 
 {% block logdataview %}
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="well well-sm">
+            <form name='levelfilterform' method="POST" action="{{ url_for('.logDataLevelFilter') }}">
+                <label>Filter >> </label>
+                <select name="logLevel">
+                    <option value="">Level</option>
+                    <option value="v">v</option>
+                    <option value="i">i</option>
+                    <option value="d">d</option>
+                    <option value="w">w</option>
+                    <option value="e">e</option>
+                </select>
+                <input type='submit' name='submit' value="Level Filter">
+            </form>
+            <form name='tagfilterform' method="POST" action="{{ url_for('.logDataTagFilter') }}">
+                <label>Filter >> </label>
+                <select name="logTag">
+                    <option value="">Tag</option>
+                    {% for tag in tagFilter %}
+                        <option value="{{ tag }}">{{ tag }}</option>
+                    {% endfor %}
+                </select>
+                <input type='submit' name='submit' value="Level Filter">
+            </form>
+        </div>
         {% for log in logdata %}
             {% if 'v' in log.level %}
                 <div class="panel panel-success">

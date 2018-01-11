@@ -16,9 +16,9 @@ def crash():
         deviceFeaturesitems = list()
         for item in deviceFeatures.items():
             deviceFeaturesitems.append(str(item[0]) + ' : ' + str(item[1]))
-            print(str(item[0]) + ' : ' + str(item[1]))
 
         data = {
+            'Time': temp['Time'],
             'AndroidVersion': temp['AndroidVersion'],
             'APPVersionCode': temp['APPVersionCode'],
             'APPVersionName': temp['APPVersionName'],

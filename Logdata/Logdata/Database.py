@@ -27,6 +27,7 @@ class DBManager:
                                              'threshold': jsonString['threshold'],
                                              'lowMemory': jsonString['lowMemory'],
                                              'dalvikPss': jsonString['dalvikPss'],
+                                             'nativePss': jsonString['nativePss'],
                                              'otherPss': jsonString['otherPss'],
                                              'totalPss': jsonString['totalPss']})
         except Exception as e:
@@ -57,7 +58,7 @@ class DBManager:
             Log.error("서버 연결 실패 : %s" % e)
 
     @staticmethod
-    def getLogdata():
+    def getLogData():
         try:
             return mongo.db.logdata_android.find().sort([('time', pymongo.DESCENDING)])
         except Exception as e:
@@ -70,6 +71,33 @@ class DBManager:
         try:
             return mongo.db.crashdata_android.find_one()
             # return mongo.db.crashdata_android.find_one().sort([('time', pymongo.DESCENDING)])
+        except Exception as e:
+            print(e)
+        except pymongo.errors.ServerSelectionTimeoutError as e:
+            Log.error("서버 연결 실패 : %s" % e)
+
+    @staticmethod
+    def getLogDataLevelFilter(level):
+        try:
+            return mongo.db.logdata_android.find({'level': level})
+        except Exception as e:
+            print(e)
+        except pymongo.errors.ServerSelectionTimeoutError as e:
+            Log.error("서버 연결 실패 : %s" % e)
+
+    @staticmethod
+    def getLogDataTagFilter(tag):
+        try:
+            return mongo.db.logdata_android.find({'tag': tag})
+        except Exception as e:
+            print(e)
+        except pymongo.errors.ServerSelectionTimeoutError as e:
+            Log.error("서버 연결 실패 : %s" % e)
+
+    @staticmethod
+    def getLogDataTagProjection():
+        try:
+            return mongo.db.logdata_android.find({}, {'_id': False, 'tag': True})
         except Exception as e:
             print(e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
