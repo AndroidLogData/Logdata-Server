@@ -7,11 +7,17 @@ from Logdata.Log_Data_Blueprint import logdata
 @logdata.route('/crash', methods=['GET', 'POST'])
 def crash():
     if request.method == 'GET':
-        # data = DBManager.getCrashData()
         temp = DBManager.getCrashData()
+
         display = json.loads(temp['Display'])
         build = json.loads(temp['Build'])
-        print(build)
+        deviceFeatures = json.loads(temp['DeviceFeatures'])
+
+        deviceFeaturesitems = list()
+        for item in deviceFeatures.items():
+            deviceFeaturesitems.append(str(item[0]) + ' : ' + str(item[1]))
+            print(str(item[0]) + ' : ' + str(item[1]))
+
         data = {
             'AndroidVersion': temp['AndroidVersion'],
             'APPVersionCode': temp['APPVersionCode'],
@@ -30,7 +36,7 @@ def crash():
             'TWRP': build['DEVICE'],
             'Hardware': build['HARDWARE'],
             'Model': build['MODEL'],
-            'DeviceFeatures': temp['DeviceFeatures'],
+            'DeviceFeatures': deviceFeaturesitems,
             'Build': temp['Build']
         }
         return render_template('crashdata_view.html', crashdata=data)
