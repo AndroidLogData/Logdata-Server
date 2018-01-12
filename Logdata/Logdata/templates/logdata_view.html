@@ -3,28 +3,30 @@
 {% block logdataview %}
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <div class="well well-sm">
-            <form name='levelfilterform' method="POST" action="{{ url_for('.logDataLevelFilter') }}">
-                <label>Filter >> </label>
-                <select name="logLevel">
-                    <option value="">Level</option>
-                    <option value="v">v</option>
-                    <option value="i">i</option>
-                    <option value="d">d</option>
-                    <option value="w">w</option>
-                    <option value="e">e</option>
-                </select>
-                <input type='submit' name='submit' value="Level Filter">
-            </form>
-            <form name='tagfilterform' method="POST" action="{{ url_for('.logDataTagFilter') }}">
-                <label>Filter >> </label>
-                <select name="logTag">
-                    <option value="">Tag</option>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                        aria-expanded="false">
+                    Level <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="{{ url_for('.logData', level='v') }}">v</a></li>
+                    <li><a href="{{ url_for('.logData', level='i') }}">i</a></li>
+                    <li><a href="{{ url_for('.logData', level='d') }}">d</a></li>
+                    <li><a href="{{ url_for('.logData', level='w') }}">w</a></li>
+                    <li><a href="{{ url_for('.logData', level='e') }}">e</a></li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                        aria-expanded="false">
+                    Tag <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
                     {% for tag in tagFilter %}
-                        <option value="{{ tag }}">{{ tag }}</option>
+                        <li><a href="{{ url_for('.logDataTagFilter', tag=tag) }}">{{ tag }}</a></li>
                     {% endfor %}
-                </select>
-                <input type='submit' name='submit' value="Level Filter">
-            </form>
+                </ul>
+            </div>
         </div>
         {% for log in logdata %}
             {% if 'v' in log.level %}

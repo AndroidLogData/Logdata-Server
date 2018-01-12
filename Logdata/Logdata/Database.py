@@ -102,3 +102,19 @@ class DBManager:
             print(e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
             Log.error("서버 연결 실패 : %s" % e)
+
+    @staticmethod
+    def getLogDataMemoryProjection():
+        try:
+            return mongo.db.logdata_android.find_one({}, {'_id': False,
+                                                          'totalMemory': True,
+                                                          'availMemory': True,
+                                                          'threshold': True,
+                                                          'dalvikPss': True,
+                                                          'nativePss': True,
+                                                          'otherPss': True,
+                                                          'totalPss': True})
+        except Exception as e:
+            print(e)
+        except pymongo.errors.ServerSelectionTimeoutError as e:
+            Log.error("서버 연결 실패 : %s" % e)

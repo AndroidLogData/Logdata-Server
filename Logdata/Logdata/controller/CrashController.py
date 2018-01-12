@@ -39,6 +39,7 @@ def crash():
             'DeviceFeatures': deviceFeaturesitems,
             'Build': temp['Build']
         }
+
         return render_template('crashdata_view.html', crashdata=data)
     elif request.method == 'POST':
         jsonString = request.get_json()
