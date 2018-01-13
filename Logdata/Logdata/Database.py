@@ -1,4 +1,6 @@
 # -*- encoding=utf-8 -*-
+import datetime
+
 import pymongo
 from flask_pymongo import PyMongo
 from Logdata.Log_Data_Logger import Log
@@ -51,7 +53,7 @@ class DBManager:
                                                'DeviceFeatures': jsonString['DeviceFeatures'],
                                                'Environment': jsonString['Environment'],
                                                'Logcat': jsonString['Logcat'],
-                                               'Time': jsonString['Time']})
+                                               'Time': datetime.datetime.strptime(jsonString['Time'], '%Y-%m-%d %H:%M:%S')})
         except pymongo.errors.DuplicateKeyError as e:
             Log.error("중복되는 키가 존재합니다.: %s" % e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
@@ -114,6 +116,23 @@ class DBManager:
                                                           'nativePss': True,
                                                           'otherPss': True,
                                                           'totalPss': True})
+        except Exception as e:
+            print(e)
+        except pymongo.errors.ServerSelectionTimeoutError as e:
+            Log.error("서버 연결 실패 : %s" % e)
+
+    @staticmethod
+    def getCrashDataProjection(start='', end=''):
+        try:
+            print(start)
+            print(end)
+            print(type(start))
+            print(type(end))
+            if start == '' and end == '':
+                return mongo.db.crashdata_android.find_one({}, {'_id': False,
+                                                                'Time': True})
+            else:
+                return mongo.db.crashdata_android.find({'Time': {'$gt': start, '$lt': end}})
         except Exception as e:
             print(e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
