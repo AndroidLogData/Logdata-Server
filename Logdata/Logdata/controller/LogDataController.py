@@ -3,11 +3,6 @@ from Logdata.Database import DBManager
 from Logdata.Log_Data_Blueprint import logdata
 
 
-@logdata.route('/')
-def index():
-    return render_template('main.html')
-
-
 @logdata.route('/logdata', methods=['GET', 'POST'])
 @logdata.route('/logdata/<string:level>', methods=['GET'])
 def logData(level=''):

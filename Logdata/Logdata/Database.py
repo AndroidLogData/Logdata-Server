@@ -168,3 +168,17 @@ class DBManager:
             print('getCrashDataProjection' + str(e))
         except pymongo.errors.ServerSelectionTimeoutError as e:
             Log.error("서버 연결 실패 : %s" % e)
+
+    @staticmethod
+    def getLogDataPackageNameProjection():
+        try:
+            data = mongo.db.logdata_android.find({}, {'_id': False,
+                                                      'packageName': True})
+            if data.count() == 0:
+                return None
+            else:
+                return data
+        except Exception as e:
+            print('getLogDataMemoryProjection' + str(e))
+        except pymongo.errors.ServerSelectionTimeoutError as e:
+            Log.error("서버 연결 실패 : %s" % e)
