@@ -2,6 +2,7 @@
 import datetime
 
 import pymongo
+from flask import render_template
 from flask_pymongo import PyMongo
 from Logdata.Log_Data_Logger import Log
 from pymongo import errors
@@ -19,10 +20,12 @@ class DBManager:
     @staticmethod
     def logDataInsert(jsonString):
         try:
-            mongo.db.logdata_android.insert({'message': jsonString['message'],
+            mongo.db.logdata_android.insert({'packageName': jsonString['packageName'],
+                                             'message': jsonString['message'],
                                              'tag': jsonString['tag'],
                                              'level': jsonString['level'],
-                                             'time': jsonString['time'],
+                                             'time': datetime.datetime.strptime(jsonString['time'],
+                                                                                '%Y-%m-%d %H:%M:%S'),
                                              'totalMemory': jsonString['totalMemory'],
                                              'availMemory': jsonString['availMemory'],
                                              'memoryPercentage': jsonString['memoryPercentage'],
@@ -53,7 +56,8 @@ class DBManager:
                                                'DeviceFeatures': jsonString['DeviceFeatures'],
                                                'Environment': jsonString['Environment'],
                                                'Logcat': jsonString['Logcat'],
-                                               'Time': datetime.datetime.strptime(jsonString['Time'], '%Y-%m-%d %H:%M:%S')})
+                                               'Time': datetime.datetime.strptime(jsonString['Time'],
+                                                                                  '%Y-%m-%d %H:%M:%S')})
         except pymongo.errors.DuplicateKeyError as e:
             Log.error("중복되는 키가 존재합니다.: %s" % e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
@@ -62,7 +66,11 @@ class DBManager:
     @staticmethod
     def getLogData():
         try:
-            return mongo.db.logdata_android.find().sort([('time', pymongo.DESCENDING)])
+            data = mongo.db.logdata_android.find().sort([('time', pymongo.DESCENDING)])
+            if data.count() == 0:
+                return None
+            else:
+                return data
         except Exception as e:
             print(e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
@@ -71,8 +79,11 @@ class DBManager:
     @staticmethod
     def getCrashData():
         try:
-            return mongo.db.crashdata_android.find_one()
-            # return mongo.db.crashdata_android.find_one().sort([('time', pymongo.DESCENDING)])
+            data = mongo.db.crashdata_android.find_one()
+            if data.count() is None:
+                return None
+            else:
+                return data
         except Exception as e:
             print(e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
@@ -81,7 +92,11 @@ class DBManager:
     @staticmethod
     def getLogDataLevelFilter(level):
         try:
-            return mongo.db.logdata_android.find({'level': level})
+            data = mongo.db.logdata_android.find({'level': level})
+            if data.count() == 0:
+                return None
+            else:
+                return data
         except Exception as e:
             print(e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
@@ -90,7 +105,11 @@ class DBManager:
     @staticmethod
     def getLogDataTagFilter(tag):
         try:
-            return mongo.db.logdata_android.find({'tag': tag})
+            data = mongo.db.logdata_android.find({'tag': tag})
+            if data.count() == 0:
+                return None
+            else:
+                return data
         except Exception as e:
             print(e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
@@ -99,7 +118,11 @@ class DBManager:
     @staticmethod
     def getLogDataTagProjection():
         try:
-            return mongo.db.logdata_android.find({}, {'_id': False, 'tag': True})
+            data = mongo.db.logdata_android.find({}, {'_id': False, 'tag': True})
+            if data.count() == 0:
+                return None
+            else:
+                return data
         except Exception as e:
             print(e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
@@ -108,7 +131,7 @@ class DBManager:
     @staticmethod
     def getLogDataMemoryProjection():
         try:
-            return mongo.db.logdata_android.find_one({}, {'_id': False,
+            data = mongo.db.logdata_android.find_one({}, {'_id': False,
                                                           'totalMemory': True,
                                                           'availMemory': True,
                                                           'threshold': True,
@@ -116,6 +139,10 @@ class DBManager:
                                                           'nativePss': True,
                                                           'otherPss': True,
                                                           'totalPss': True})
+            if data.count() is None:
+                return None
+            else:
+                return data
         except Exception as e:
             print(e)
         except pymongo.errors.ServerSelectionTimeoutError as e:
@@ -129,10 +156,18 @@ class DBManager:
             print(type(start))
             print(type(end))
             if start == '' and end == '':
-                return mongo.db.crashdata_android.find_one({}, {'_id': False,
+                data = mongo.db.crashdata_android.find_one({}, {'_id': False,
                                                                 'Time': True})
+                if data.count() is None:
+                    return None
+                else:
+                    return data
             else:
-                return mongo.db.crashdata_android.find({'Time': {'$gt': start, '$lt': end}})
+                data = mongo.db.crashdata_android.find({'Time': {'$gt': start, '$lt': end}})
+                if data.count() == 0:
+                    return 'there is no data'
+                else:
+                    return data
         except Exception as e:
             print(e)
         except pymongo.errors.ServerSelectionTimeoutError as e:

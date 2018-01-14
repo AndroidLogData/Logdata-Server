@@ -11,6 +11,9 @@ def crash():
     if request.method == 'GET':
         temp = DBManager.getCrashData()
 
+        if temp is None:
+            return render_template('nodata.html')
+
         display = json.loads(temp['Display'])
         build = json.loads(temp['Build'])
         deviceFeatures = json.loads(temp['DeviceFeatures'])

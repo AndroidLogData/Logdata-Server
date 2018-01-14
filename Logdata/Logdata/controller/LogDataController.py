@@ -1,4 +1,4 @@
-from flask import render_template, request, url_for
+from flask import render_template, request
 from Logdata.Database import DBManager
 from Logdata.Log_Data_Blueprint import logdata
 
@@ -15,10 +15,16 @@ def logData(level=''):
         if level in ['i', 'v', 'e', 'w', 'd']:
             data = DBManager.getLogDataLevelFilter(level)
 
-            return render_template('logdata_view.html', logdata=data, tagFilter=logDataTagSelection())
+            if data is None:
+                return render_template('nodata.html')
+            else:
+                return render_template('logdata_view.html', logdata=data, tagFilter=logDataTagSelection())
         else:
             data = DBManager.getLogData()
             memory = DBManager.getLogDataMemoryProjection()
+
+            if data is None or memory is None:
+                return render_template('nodata.html')
 
             memory['totalMemory'] /= 1024 * 1024
             memory['availMemory'] /= 1024 * 1024
@@ -54,6 +60,9 @@ def logData(level=''):
 def logDataTagFilter(tag):
     if request.method == 'GET':
         data = DBManager.getLogDataTagFilter(tag)
+
+        if data is None:
+            return render_template('nodata.html')
 
         return render_template('logdata_view.html', logdata=data, tagFilter=logDataTagSelection())
 
