@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, jsonify
 from Logdata.Database import DBManager
 from Logdata.Log_Data_Blueprint import logdata
 
@@ -40,7 +40,7 @@ def logData():
         jsonString = request.get_json()
         print(jsonString)
         DBManager.logDataInsert(jsonString)
-        return 'success'
+        return jsonify({'result': 'success'})
 
 
 @logdata.route('/logdatalevelfilter/<string:level>', methods=['GET'])

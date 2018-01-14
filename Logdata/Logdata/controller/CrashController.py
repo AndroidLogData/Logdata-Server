@@ -1,6 +1,6 @@
 import datetime
 
-from flask import request, render_template
+from flask import request, render_template, jsonify
 import json
 from Logdata import DBManager
 from Logdata.Log_Data_Blueprint import logdata
@@ -62,4 +62,4 @@ def crash():
         jsonString = request.get_json()
         print(jsonString)
         DBManager.crashDataInsert(jsonString)
-        return 'success'
+        return jsonify({'result': 'success'})
