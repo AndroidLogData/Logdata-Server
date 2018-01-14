@@ -72,7 +72,7 @@ class DBManager:
             else:
                 return data
         except Exception as e:
-            print(e)
+            print('getLogData' + str(e))
         except pymongo.errors.ServerSelectionTimeoutError as e:
             Log.error("서버 연결 실패 : %s" % e)
 
@@ -85,7 +85,7 @@ class DBManager:
             else:
                 return data
         except Exception as e:
-            print(e)
+            print('getCrashData' + str(e))
         except pymongo.errors.ServerSelectionTimeoutError as e:
             Log.error("서버 연결 실패 : %s" % e)
 
@@ -98,7 +98,7 @@ class DBManager:
             else:
                 return data
         except Exception as e:
-            print(e)
+            print('getLogDataLevelFilter' + str(e))
         except pymongo.errors.ServerSelectionTimeoutError as e:
             Log.error("서버 연결 실패 : %s" % e)
 
@@ -111,7 +111,7 @@ class DBManager:
             else:
                 return data
         except Exception as e:
-            print(e)
+            print('getLogDataTagFilter' + str(e))
         except pymongo.errors.ServerSelectionTimeoutError as e:
             Log.error("서버 연결 실패 : %s" % e)
 
@@ -124,7 +124,7 @@ class DBManager:
             else:
                 return data
         except Exception as e:
-            print(e)
+            print('getLogDataTagProjection' + str(e))
         except pymongo.errors.ServerSelectionTimeoutError as e:
             Log.error("서버 연결 실패 : %s" % e)
 
@@ -139,26 +139,22 @@ class DBManager:
                                                           'nativePss': True,
                                                           'otherPss': True,
                                                           'totalPss': True})
-            if data.count() is None:
+            if not data:
                 return None
             else:
                 return data
         except Exception as e:
-            print(e)
+            print('getLogDataMemoryProjection' + str(e))
         except pymongo.errors.ServerSelectionTimeoutError as e:
             Log.error("서버 연결 실패 : %s" % e)
 
     @staticmethod
     def getCrashDataProjection(start='', end=''):
         try:
-            print(start)
-            print(end)
-            print(type(start))
-            print(type(end))
             if start == '' and end == '':
                 data = mongo.db.crashdata_android.find_one({}, {'_id': False,
                                                                 'Time': True})
-                if data.count() is None:
+                if not data:
                     return None
                 else:
                     return data
@@ -169,6 +165,6 @@ class DBManager:
                 else:
                     return data
         except Exception as e:
-            print(e)
+            print('getCrashDataProjection' + str(e))
         except pymongo.errors.ServerSelectionTimeoutError as e:
             Log.error("서버 연결 실패 : %s" % e)
