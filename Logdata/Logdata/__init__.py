@@ -1,9 +1,8 @@
 import os
-from flask import Flask, render_template, request, url_for
+
+from flask import render_template, request, url_for
 from flask_mongoengine import *
 from mongoengine import connect
-
-from Logdata.Database import DBManager
 
 
 def print_settings(config):
@@ -62,8 +61,6 @@ def create_app(config_filepath='resource/config.cfg'):
     log_data_app.config['TEMPLATES_AUTO_RELOAD'] = True
 
     # 데이터베이스 초기화
-    # log_data_app.config['MONGODB_SETTINGS'] = {'db': ['logdata_android', 'crashdata_android']}
     connect('Logdata')
-    DBManager.init(log_data_app)
 
     return log_data_app
