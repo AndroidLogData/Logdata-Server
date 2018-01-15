@@ -8,6 +8,11 @@ def index():
     data = DBManager.getLogDataPackageNameProjection()
     values = set()
 
+    print(data)
+
+    if data is None:
+        return render_template('main.html')
+
     for d in data:
         values.add(d['packageName'])
 
