@@ -1,76 +1,90 @@
+import datetime
+
 from flask import render_template, request, jsonify
-from Logdata.Database import DBManager
+
 from Logdata.Log_Data_Blueprint import logdata
+from Logdata.model.LogData import LogData
 
 
 @logdata.route('/logdata', methods=['GET', 'POST'])
 def logData():
     if request.method == 'GET':
-        data = DBManager.getLogData()
-        memory = DBManager.getLogDataMemoryProjection()
+        try:
+            items = LogData.objects().all()
 
-        if data is None or memory is None:
-            return render_template('nodata.html')
+            if items.count() == 0:
+                return render_template('nodata.html')
 
-        memory['totalMemory'] /= 1024 * 1024
-        memory['availMemory'] /= 1024 * 1024
-        memory['threshold'] /= 1024 * 1024
-        memory['dalvikPss'] /= 1024
-        memory['nativePss'] /= 1024
-        memory['otherPss'] /= 1024
-        memory['totalPss'] /= 1024
+            for item in items:
+                item.totalMemory /= 1024 * 1024
+                item.availMemory /= 1024 * 1024
+                item.threshold /= 1024 * 1024
+                item.dalvikPss /= 1024
+                item.nativePss /= 1024
+                item.otherPss /= 1024
+                item.totalPss /= 1024
 
-        memoryLabels = ["totalMemory", "availMemory", "threshold"]
-        memoryValues = [memory['totalMemory'], memory['availMemory'], memory['threshold']]
-        memoryColors = ["#F7464A", "#46BFBD", "#FDB45C"]
+            # memoryLabels = ["totalMemory", "availMemory", "threshold"]
+            # memoryColors = ["#F7464A", "#46BFBD", "#FDB45C"]
+            #
+            # pssLabels = ["dalvikPss", "nativePss", "otherPss", "totalPss"]
+            # pssColors = ["#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA"]
+            #
+            # labels = ["January", "February", "March", "April", "May", "June", "July", "August"]
+            # values = [10, 9, 8, 7, 6, 4, 7, 8]
+            # colors = ["#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA", "#ABCDEF", "#DDDDDD", "#ABCABC"]
 
-        pssLabels = ["dalvikPss", "nativePss", "otherPss", "totalPss"]
-        pssValues = [memory['dalvikPss'], memory['nativePss'], memory['otherPss'], memory['totalPss']]
-        pssColors = ["#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA"]
-
-        labels = ["January", "February", "March", "April", "May", "June", "July", "August"]
-        values = [10, 9, 8, 7, 6, 4, 7, 8]
-        colors = ["#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA", "#ABCDEF", "#DDDDDD", "#ABCABC"]
-
-        return render_template('logdata_view.html', logdata=data, tagFilter=logDataTagSelection(),
-                               memorySet=zip(memoryValues, memoryLabels, memoryColors),
-                               pssSet=zip(pssValues, pssLabels, pssColors),
-                               set=zip(values, labels, colors))
+            return render_template('logdata_view.html', logdata=items, tagFilter=logDataTagSelection())
+        except Exception as e:
+            print(e)
     elif request.method == 'POST':
         jsonString = request.get_json()
-        print(jsonString)
-        DBManager.logDataInsert(jsonString)
+        data = LogData(jsonString['packageName'],
+                       jsonString['message'],
+                       jsonString['tag'],
+                       jsonString['level'],
+                       datetime.datetime.strptime(jsonString['time'], '%Y-%m-%d %H:%M:%S'),
+                       jsonString['totalMemory'],
+                       jsonString['availMemory'],
+                       jsonString['memoryPercentage'],
+                       jsonString['threshold'],
+                       jsonString['lowMemory'],
+                       jsonString['dalvikPss'],
+                       jsonString['nativePss'],
+                       jsonString['otherPss'],
+                       jsonString['totalPss'])
+        data.save()
         return jsonify({'result': 'success'})
 
 
 @logdata.route('/logdatalevelfilter/<string:level>', methods=['GET'])
 def logDataLevelFilter(level):
     if request.method == 'GET':
-        data = DBManager.getLogDataLevelFilter(level)
+        items = LogData.objects(level=level).all()
 
-        if data is None:
+        if items.count() == 0:
             return render_template('nodata.html')
 
-        return render_template('logdata_view.html', logdata=data, tagFilter=logDataTagSelection())
+        return render_template('logdata_view.html', logdata=items, tagFilter=logDataTagSelection())
 
 
 @logdata.route('/logdatatagfilter/<string:tag>', methods=['GET'])
 def logDataTagFilter(tag):
     if request.method == 'GET':
-        data = DBManager.getLogDataTagFilter(tag)
+        items = LogData.objects(tag=tag)
 
-        if data is None:
+        if items.count() == 0:
             return render_template('nodata.html')
 
-        return render_template('logdata_view.html', logdata=data, tagFilter=logDataTagSelection())
+        return render_template('logdata_view.html', logdata=items, tagFilter=logDataTagSelection())
 
 
 def logDataTagSelection():
-    projection = DBManager.getLogDataTagProjection()
+    projection = LogData.objects().all()
     tagFilter = set()
 
     for item in projection:
-        tagFilter.add(item['tag'])
+        tagFilter.add(item.tag)
 
     return tagFilter
 
@@ -78,9 +92,9 @@ def logDataTagSelection():
 @logdata.route('/logdatapackagename/<string:packageName>', methods=['GET'])
 def logDataPackageName(packageName):
     if request.method == 'GET':
-        data = DBManager.getLogDataPackageName(packageName)
+        items = LogData.objects(packageName=packageName).all()
 
-        if data is None:
+        if items.count() == 0:
             return render_template('nodata.html')
 
-        return render_template('logdata_view.html', logdata=data, tagFilter=logDataTagSelection())
+        return render_template('logdata_view.html', logdata=items, tagFilter=logDataTagSelection())
