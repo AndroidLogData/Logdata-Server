@@ -63,7 +63,7 @@ def logData():
 @logdata.route('/logdatalevelfilter/<string:level>', methods=['GET'])
 def logDataLevelFilter(level):
     if request.method == 'GET':
-        items = LogData.objects(level=level).all()
+        items = LogData.objects(level=level).all().order_by('-time')
 
         if items.count() == 0:
             return render_template('nodata.html')
@@ -74,7 +74,7 @@ def logDataLevelFilter(level):
 @logdata.route('/logdatatagfilter/<string:tag>', methods=['GET'])
 def logDataTagFilter(tag):
     if request.method == 'GET':
-        items = LogData.objects(tag=tag)
+        items = LogData.objects(tag=tag).all().order_by('-time')
 
         if items.count() == 0:
             return render_template('nodata.html')
