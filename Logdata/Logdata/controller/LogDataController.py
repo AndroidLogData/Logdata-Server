@@ -10,7 +10,7 @@ from Logdata.model.LogData import LogData
 def logData():
     if request.method == 'GET':
         try:
-            items = LogData.objects().all()
+            items = LogData.objects().all().order_by('-time')
 
             if items.count() == 0:
                 return render_template('nodata.html')
@@ -34,7 +34,10 @@ def logData():
             # values = [10, 9, 8, 7, 6, 4, 7, 8]
             # colors = ["#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA", "#ABCDEF", "#DDDDDD", "#ABCABC"]
 
-            return render_template('logdata_view.html', logdata=items, tagFilter=logDataTagSelection())
+            return render_template('logdata_view.html',
+                                   logdata=items,
+                                   tagFilter=logDataTagSelection(),
+                                   packageNameFilter=logDataPackageNameSelection())
         except Exception as e:
             print(e)
     elif request.method == 'POST':
@@ -89,12 +92,25 @@ def logDataTagSelection():
     return tagFilter
 
 
+def logDataPackageNameSelection():
+    projection = LogData.objects().all()
+    packageNameFilter = set()
+
+    for item in projection:
+        packageNameFilter.add(item.packageName)
+
+    return packageNameFilter
+
+
 @logdata.route('/logdatapackagename/<string:packageName>', methods=['GET'])
 def logDataPackageName(packageName):
     if request.method == 'GET':
-        items = LogData.objects(packageName=packageName).all()
+        items = LogData.objects(packageName=packageName).all().order_by('-time')
 
         if items.count() == 0:
             return render_template('nodata.html')
 
-        return render_template('logdata_view.html', logdata=items, tagFilter=logDataTagSelection())
+        return render_template('logdata_view.html',
+                               logdata=items,
+                               tagFilter=logDataTagSelection(),
+                               packageNameFilter=logDataPackageNameSelection())
