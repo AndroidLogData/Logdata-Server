@@ -68,7 +68,10 @@ def logDataLevelFilter(level):
         if items.count() == 0:
             return render_template('nodata.html')
 
-        return render_template('logdata_view.html', logdata=items, tagFilter=logDataTagSelection())
+        return render_template('logdata_view.html',
+                               logdata=items,
+                               tagFilter=logDataTagSelection(),
+                               packageNameFilter=logDataPackageNameSelection())
 
 
 @logdata.route('/logdatatagfilter/<string:tag>', methods=['GET'])
@@ -79,7 +82,10 @@ def logDataTagFilter(tag):
         if items.count() == 0:
             return render_template('nodata.html')
 
-        return render_template('logdata_view.html', logdata=items, tagFilter=logDataTagSelection())
+        return render_template('logdata_view.html',
+                               logdata=items,
+                               tagFilter=logDataTagSelection(),
+                               packageNameFilter=logDataPackageNameSelection())
 
 
 def logDataTagSelection():

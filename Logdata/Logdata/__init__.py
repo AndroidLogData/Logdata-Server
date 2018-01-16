@@ -47,6 +47,7 @@ def create_app(config_filepath='resource/config.cfg'):
     from Logdata.controller import LogDataController
     from Logdata.controller import CrashController
     from Logdata.controller import MainController
+    from Logdata.controller import HelpController
     from Logdata.Log_Data_Blueprint import logdata
     log_data_app.register_blueprint(logdata)
 

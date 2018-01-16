@@ -47,8 +47,8 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{{ url_for('.index') }}">Dash Board</a></li>
                 <li><a href="{{ url_for('.logData') }}">Log Data</a></li>
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Help</a></li>
+{#                <li><a href="#">Profile</a></li>#}
+                <li><a href="{{ url_for('.help') }}">Help</a></li>
             </ul>
             <form class="navbar-form navbar-right">
                 <input type="text" class="form-control" placeholder="Search...">
@@ -71,6 +71,9 @@
 </div>
 <div class="col s12 m10 l10">
     {% block crashdataview %}{% endblock %}
+</div>
+<div class="col s12 m10 l10">
+    {% block help %}{% endblock %}
 </div>
 
 <!-- Bootstrap core JavaScript
