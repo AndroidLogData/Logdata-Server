@@ -24,16 +24,6 @@ def logData():
                 item.otherPss /= 1024
                 item.totalPss /= 1024
 
-            # memoryLabels = ["totalMemory", "availMemory", "threshold"]
-            # memoryColors = ["#F7464A", "#46BFBD", "#FDB45C"]
-            #
-            # pssLabels = ["dalvikPss", "nativePss", "otherPss", "totalPss"]
-            # pssColors = ["#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA"]
-            #
-            # labels = ["January", "February", "March", "April", "May", "June", "July", "August"]
-            # values = [10, 9, 8, 7, 6, 4, 7, 8]
-            # colors = ["#F7464A", "#46BFBD", "#FDB45C", "#FEDCBA", "#ABCDEF", "#DDDDDD", "#ABCABC"]
-
             return render_template('logdata_view.html',
                                    logdata=items,
                                    tagFilter=logDataTagSelection(),

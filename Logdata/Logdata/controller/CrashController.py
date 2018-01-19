@@ -10,11 +10,8 @@ from Logdata.model.CrashData import CrashData
 @logdata.route('/crash', methods=['GET', 'POST'])
 def crash():
     if request.method == 'GET':
-        # temp = DBManager.getCrashData()
         temp = CrashData.objects().first()
 
-        # if temp.count() == 0:
-        #     return render_template('nodata.html')
         if temp is None:
             return render_template('nodata.html')
 

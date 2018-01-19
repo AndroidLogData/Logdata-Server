@@ -6,7 +6,6 @@ from Logdata.model.LogData import LogData
 @logdata.route('/')
 def index():
     try:
-        # data = Logdata.objects().fields(packageName=1)
         items = LogData.objects().all()
         values = set()
 
