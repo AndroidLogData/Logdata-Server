@@ -1,7 +1,8 @@
 import os
-from flask import Flask, render_template, request, url_for
 
-from Logdata.Database import DBManager
+from flask import render_template, request, url_for
+from flask_mongoengine import *
+from mongoengine import connect
 
 
 def print_settings(config):
@@ -41,12 +42,12 @@ def create_app(config_filepath='resource/config.cfg'):
     log_filepath = os.path.join(log_data_app.root_path, log_data_app.config['LOG_FILE_PATH'])
     Log.init(log_filepath=log_filepath)
 
-    log_data_app.config['MONGODB_SETTINGS'] = {'db': 'logdata_android'}
-
     # 뷰 함수 모듈은 어플리케이션 객체 생성하고 블루프린트 등록전에
     # 뷰 함수가 있는 모듈을 임포트해야 해당 뷰 함수들을 인식할 수 있음
     from Logdata.controller import LogDataController
     from Logdata.controller import CrashController
+    from Logdata.controller import MainController
+    from Logdata.controller import HelpController
     from Logdata.Log_Data_Blueprint import logdata
     log_data_app.register_blueprint(logdata)
 
@@ -57,7 +58,10 @@ def create_app(config_filepath='resource/config.cfg'):
     # 페이징 처리를 위한 템플릿 함수
     log_data_app.jinja_env.globals['url_for_other_page'] = url_for_other_page
 
+    log_data_app.jinja_env.auto_reload = True
+    log_data_app.config['TEMPLATES_AUTO_RELOAD'] = True
+
     # 데이터베이스 초기화
-    DBManager.init(log_data_app)
+    connect('Logdata')
 
     return log_data_app

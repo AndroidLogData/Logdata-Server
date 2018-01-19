@@ -1,0 +1,161 @@
+{% extends 'index.html' %}
+
+{% block crashdataview %}
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div style="width:75%;">
+            <canvas id="canvas"></canvas>
+        </div>
+        <script>
+            var timeFormat = 'YYYY-MM-DD HH:mm:ss';
+            var color = Chart.helpers.color;
+            var config = {
+                type: 'line',
+                scaleSteps: 1,
+                scaleStepWidth: 10,
+                data: {
+                    datasets: [{
+                        label: "Crash Count",
+                        backgroundColor: color(window.chartColors.green).alpha(0.5).rgbString(),
+                        borderColor: window.chartColors.green,
+                        fill: false,
+                        data: [
+                            {% for time, count in values %}
+                                {
+                                    x: '{{ time }}',
+                                    y: {{ count }}
+                                },
+                            {% endfor %}
+                        ]
+                    }]
+                },
+                options: {
+                    title: {
+                        text: "Crash Count"
+                    },
+                    scales: {
+                        xAxes: [{
+                            type: "time",
+                            time: {
+                                format: timeFormat,
+                                tooltipFormat: 'YYYY-MM-DD HH:mm:ss'
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Date'
+                            }
+                        }],
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Crash Count'
+                            }
+                        }]
+                    }
+                }
+            };
+
+            window.onload = function () {
+                var ctx = document.getElementById("canvas").getContext("2d");
+                window.myLine = new Chart(ctx, config);
+            };
+        </script>
+
+        {% for time, count in values %}
+            <h1>asdf</h1>
+            <h1>{{ time }}</h1>
+            <h1>{{ count }}</h1>
+        {% endfor %}
+        <h2 class="sub-header">Crash Data</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Crash Time</td>
+                    <td>{{ crashdata.Time }}</td>
+                </tr>
+                <tr>
+                    <td>Android Version</td>
+                    <td>{{ crashdata.AndroidVersion }}</td>
+                </tr>
+                <tr>
+                    <td>APP Version Code</td>
+                    <td>{{ crashdata.APPVersionCode }}</td>
+                </tr>
+                <tr>
+                    <td>APP Version Name</td>
+                    <td>{{ crashdata.APPVersionName }}</td>
+                </tr>
+                <tr>
+                    <td>Available Memory Size</td>
+                    <td>{{ crashdata.AvailableMemorySize }}</td>
+                </tr>
+                <tr>
+                    <td>Brand</td>
+                    <td>{{ crashdata.Brand }}</td>
+                </tr>
+                <tr>
+                    <td>Display</td>
+                    <td>{{ crashdata.Display }}</td>
+                </tr>
+                <tr>
+                    <td>Rotation</td>
+                    <td>{{ crashdata.Rotation }}</td>
+                </tr>
+                <tr>
+                    <td>BootLoader</td>
+                    <td>{{ crashdata.BootLoader }}</td>
+                </tr>
+                <tr>
+                    <td>BuildBrand</td>
+                    <td>{{ crashdata.BuildBrand }}</td>
+                </tr>
+                <tr>
+                    <td>CPU_ABI</td>
+                    <td>{{ crashdata.CPU_ABI }}</td>
+                </tr>
+                <tr>
+                    <td>CPU_ABI2</td>
+                    <td>{{ crashdata.CPU_ABI2 }}</td>
+                </tr>
+                <tr>
+                    <td>DisplayFirmware</td>
+                    <td>{{ crashdata.DisplayFirmware }}</td>
+                </tr>
+                <tr>
+                    <td>TWRP</td>
+                    <td>{{ crashdata.TWRP }}</td>
+                </tr>
+                <tr>
+                    <td>Model</td>
+                    <td>{{ crashdata.Model }}</td>
+                </tr>
+                <tr>
+                    <td>MainBoard</td>
+                    <td>{{ crashdata.Board }}</td>
+                </tr>
+                <tr>
+                    <td>Device Features</td>
+                    <td>
+                        {% for item in crashdata.DeviceFeatures %}
+                            {{ item }}
+                            <br/>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Logcat</td>
+                    <td>
+                        <pre>{{ crashdata.Logcat }}</pre>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

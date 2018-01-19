@@ -2,60 +2,100 @@
 
 {% block logdataview %}
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Filter</h3>
+            </div>
+            <div class="panel-body">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                            aria-expanded="false">
+                        Level <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{{ url_for('.logDataLevelFilter', level='v') }}">v</a></li>
+                        <li><a href="{{ url_for('.logDataLevelFilter', level='i') }}">i</a></li>
+                        <li><a href="{{ url_for('.logDataLevelFilter', level='d') }}">d</a></li>
+                        <li><a href="{{ url_for('.logDataLevelFilter', level='w') }}">w</a></li>
+                        <li><a href="{{ url_for('.logDataLevelFilter', level='e') }}">e</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                            aria-expanded="false">
+                        Tag <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        {% for tag in tagFilter %}
+                            <li><a href="{{ url_for('.logDataTagFilter', tag=tag) }}">{{ tag }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                            aria-expanded="false">
+                        Package Name <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        {% for item in packageNameFilter %}
+                            <li><a href="{{ url_for('.logDataPackageName', packageName=item) }}">{{ item }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
         {% for log in logdata %}
-{#            <div class="well well-sm">#}
-                {% if 'v' in log.level %}
-                    <div class="panel panel-success">
-                        <div class="panel-heading">Verb</div>
-                        <div class="panel-body">
-                            <p>Time : {{ log.time }}</p>
-                            <p>Tag : {{ log.tag }}</p>
-                            <p>Message : {{ log.message }}</p>
-                            <p>Level : {{ log.level }}</p>
-                        </div>
+            {% if 'v' in log.level %}
+                <div class="panel panel-success">
+                    <div class="panel-heading">Verb</div>
+                    <div class="panel-body">
+                        <p>Time : {{ log.time }}</p>
+                        <p>Tag : {{ log.tag }}</p>
+                        <p>Message : {{ log.message }}</p>
+                        <p>Level : {{ log.level }}</p>
                     </div>
-                {% elif 'i' in log.level %}
-                    <div class="panel panel-info">
-                        <div class="panel-heading">Info</div>
-                        <div class="panel-body">
-                            <p>Time : {{ log.time }}</p>
-                            <p>Tag : {{ log.tag }}</p>
-                            <p>Message : {{ log.message }}</p>
-                            <p>Level : {{ log.level }}</p>
-                        </div>
+                </div>
+            {% elif 'i' in log.level %}
+                <div class="panel panel-info">
+                    <div class="panel-heading">Info</div>
+                    <div class="panel-body">
+                        <p>Time : {{ log.time }}</p>
+                        <p>Tag : {{ log.tag }}</p>
+                        <p>Message : {{ log.message }}</p>
+                        <p>Level : {{ log.level }}</p>
                     </div>
-                {% elif 'd' in log.level %}
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">Debug</div>
-                        <div class="panel-body">
-                            <p>Time : {{ log.time }}</p>
-                            <p>Tag : {{ log.tag }}</p>
-                            <p>Message : {{ log.message }}</p>
-                            <p>Level : {{ log.level }}</p>
-                        </div>
+                </div>
+            {% elif 'd' in log.level %}
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Debug</div>
+                    <div class="panel-body">
+                        <p>Time : {{ log.time }}</p>
+                        <p>Tag : {{ log.tag }}</p>
+                        <p>Message : {{ log.message }}</p>
+                        <p>Level : {{ log.level }}</p>
                     </div>
-                {% elif 'e' in log.level %}
-                    <div class="panel panel-danger">
-                        <div class="panel-heading">Error</div>
-                        <div class="panel-body">
-                            <p>Time : {{ log.time }}</p>
-                            <p>Tag : {{ log.tag }}</p>
-                            <p>Message : {{ log.message }}</p>
-                            <p>Level : {{ log.level }}</p>
-                        </div>
+                </div>
+            {% elif 'e' in log.level %}
+                <div class="panel panel-danger">
+                    <div class="panel-heading">Error</div>
+                    <div class="panel-body">
+                        <p>Time : {{ log.time }}</p>
+                        <p>Tag : {{ log.tag }}</p>
+                        <p>Message : {{ log.message }}</p>
+                        <p>Level : {{ log.level }}</p>
                     </div>
-                {% elif 'w' in log.level %}
-                    <div class="panel panel-warning">
-                        <div class="panel-heading">Warning</div>
-                        <div class="panel-body">
-                            <p>Time : {{ log.time }}</p>
-                            <p>Tag : {{ log.tag }}</p>
-                            <p>Message : {{ log.message }}</p>
-                            <p>Level : {{ log.level }}</p>
-                        </div>
+                </div>
+            {% elif 'w' in log.level %}
+                <div class="panel panel-warning">
+                    <div class="panel-heading">Warning</div>
+                    <div class="panel-body">
+                        <p>Time : {{ log.time }}</p>
+                        <p>Tag : {{ log.tag }}</p>
+                        <p>Message : {{ log.message }}</p>
+                        <p>Level : {{ log.level }}</p>
                     </div>
-                {% endif %}
-{#            </div>#}
+                </div>
+            {% endif %}
         {% endfor %}
     </div>
 {% endblock %}

@@ -1,22 +1,112 @@
-from flask import render_template, request
+import datetime
 
-from Logdata.Database import DBManager
+from flask import render_template, request, jsonify
+
 from Logdata.Log_Data_Blueprint import logdata
-
-
-@logdata.route('/')
-def index():
-    return render_template('index.html')
+from Logdata.model.LogData import LogData
 
 
 @logdata.route('/logdata', methods=['GET', 'POST'])
 def logData():
     if request.method == 'GET':
-        data = DBManager.getLogdata()
-        return render_template('logdata_view.html', logdata=data)
+        try:
+            items = LogData.objects().all().order_by('-time')
+
+            if items.count() == 0:
+                return render_template('nodata.html')
+
+            for item in items:
+                item.totalMemory /= 1024 * 1024
+                item.availMemory /= 1024 * 1024
+                item.threshold /= 1024 * 1024
+                item.dalvikPss /= 1024
+                item.nativePss /= 1024
+                item.otherPss /= 1024
+                item.totalPss /= 1024
+
+            return render_template('logdata_view.html',
+                                   logdata=items,
+                                   tagFilter=logDataTagSelection(),
+                                   packageNameFilter=logDataPackageNameSelection())
+        except Exception as e:
+            print(e)
     elif request.method == 'POST':
-        print(request.headers)
         jsonString = request.get_json()
-        print(jsonString)
-        DBManager.logDataInsert(jsonString)
-        return 'success'
+        data = LogData(jsonString['packageName'],
+                       jsonString['message'],
+                       jsonString['tag'],
+                       jsonString['level'],
+                       datetime.datetime.strptime(jsonString['time'], '%Y-%m-%d %H:%M:%S'),
+                       jsonString['totalMemory'],
+                       jsonString['availMemory'],
+                       jsonString['memoryPercentage'],
+                       jsonString['threshold'],
+                       jsonString['lowMemory'],
+                       jsonString['dalvikPss'],
+                       jsonString['nativePss'],
+                       jsonString['otherPss'],
+                       jsonString['totalPss'])
+        data.save()
+        return jsonify({'result': 'success'})
+
+
+@logdata.route('/logdatalevelfilter/<string:level>', methods=['GET'])
+def logDataLevelFilter(level):
+    if request.method == 'GET':
+        items = LogData.objects(level=level).all().order_by('-time')
+
+        if items.count() == 0:
+            return render_template('nodata.html')
+
+        return render_template('logdata_view.html',
+                               logdata=items,
+                               tagFilter=logDataTagSelection(),
+                               packageNameFilter=logDataPackageNameSelection())
+
+
+@logdata.route('/logdatatagfilter/<string:tag>', methods=['GET'])
+def logDataTagFilter(tag):
+    if request.method == 'GET':
+        items = LogData.objects(tag=tag).all().order_by('-time')
+
+        if items.count() == 0:
+            return render_template('nodata.html')
+
+        return render_template('logdata_view.html',
+                               logdata=items,
+                               tagFilter=logDataTagSelection(),
+                               packageNameFilter=logDataPackageNameSelection())
+
+
+def logDataTagSelection():
+    projection = LogData.objects().all()
+    tagFilter = set()
+
+    for item in projection:
+        tagFilter.add(item.tag)
+
+    return tagFilter
+
+
+def logDataPackageNameSelection():
+    projection = LogData.objects().all()
+    packageNameFilter = set()
+
+    for item in projection:
+        packageNameFilter.add(item.packageName)
+
+    return packageNameFilter
+
+
+@logdata.route('/logdatapackagename/<string:packageName>', methods=['GET'])
+def logDataPackageName(packageName):
+    if request.method == 'GET':
+        items = LogData.objects(packageName=packageName).all().order_by('-time')
+
+        if items.count() == 0:
+            return render_template('nodata.html')
+
+        return render_template('logdata_view.html',
+                               logdata=items,
+                               tagFilter=logDataTagSelection(),
+                               packageNameFilter=logDataPackageNameSelection())
