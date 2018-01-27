@@ -1,3 +1,6 @@
+# Server 변경으로 인한 이전 Spring
+[Logdata-Server-Spring](https://github.com/AndroidLogData/Logdata-Server-Spring)
+
 # Android Log Data Server
 
 안드로이드 로그 데이터를 관리하기 위한 서버
